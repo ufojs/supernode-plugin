@@ -1,0 +1,29 @@
+{
+  "name": "supernode-plugin",
+  "version": "0.0.1",
+  "author": "TinyBox",
+  "description": "The ufo.js supernode plugin",
+  "contributors": [
+    {
+      "name": "Pasquale Boemio",
+      "email": "boemianrapsodi@gmail.com"
+    }
+  ],
+  "scripts": {
+    "test": "./node_modules/.bin/grunt unit-test compile integration-test",
+    "postinstall": "./node_modules/.bin/grunt"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ufojs/supernode-plugin.git"
+  },
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "grunt-cli": "^0.1.13",
+    "grunt-bower-task": "^0.3.4",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-contrib-clean": "^0.5.0",
+    "grunt-mocha-test": "^0.10.2"
+  }
+}

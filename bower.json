@@ -1,0 +1,24 @@
+{
+  "name": "supernode-plugin",
+  "version": "0.0.1",
+  "homepage": "https://github.com/ufojs/supernode-plugin",
+  "authors": [
+    "Pasquale Boemio <boemianrapsodi@gmail.com>"
+  ],
+  "description": "The ufo.js supernode plugin",
+  "keywords": [
+    "ufojs",
+    "websocket",
+    "supernode",
+    "chromeapp"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
+  "dependencies": {
+    "wssjs": "~0.0.5"
+  }
+}
