@@ -10,7 +10,7 @@
     }
   ],
   "scripts": {
-    "test": "./node_modules/.bin/grunt unit-test compile integration-test",
+    "test": "./node_modules/.bin/grunt unit-test",
     "postinstall": "./node_modules/.bin/grunt"
   },
   "repository": {
