@@ -2,3 +2,5 @@
 node_modules/
 lib/
 npm-debug.log
+chrome-app/supernode.bundle.js
+chrome-app/window.html
