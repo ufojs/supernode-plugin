@@ -13,6 +13,7 @@ class fakeWSS
 class fakeList
   constructor: () ->
   add: (id, node) ->
+  remove: (id) ->
 
 describe 'The main method', ->
   
@@ -20,6 +21,14 @@ describe 'The main method', ->
     mainModule = rewire '../src/main'
     mainModule.__set__ 'WSS', fakeWSS
     mainModule.__set__ 'List', fakeList
+    done()
+
+  it 'should accept onListChanged callback', (done) ->
+    callback = (theList) ->
+    mainModule.main callback
+    currentList = mainModule.__get__ 'list'
+    currentList.onnodeadded.should.be.equal callback
+    currentList.onnoderemoved.should.be.equal callback
     done()
 
   it 'should put the websocket server in listening', (done) ->
@@ -51,6 +60,33 @@ describe 'The main method', ->
     callback fakeSocket
     fakeSocket.should.respondTo 'onmessage'
     done()
+
+  it 'should set onclose callback in onOpenCallback', (done) ->
+    fakeSocket = {}
+    callback = mainModule.__get__ 'onOpenCallback'
+    callback fakeSocket
+    fakeSocket.should.respondTo 'onclose'
+    done()
+
+  it 'should remove a node from the list when it goes away', (done) ->
+    message = 
+      'type': 'peering',
+      'originator': 'the id',
+      'body': 'the body'
+    message = JSON.stringify message
+    event =
+      'data': message
+    fakeSocket = {}
+    callback = mainModule.__get__ 'onOpenCallback'
+    callback fakeSocket
+    fakeList::remove = (id) -> 
+      fakeList::remove = (id) -> 
+      id.should.be.equal 'the id'
+      done()
+    mainModule.__set__ 'list', new fakeList
+    
+    fakeSocket.onmessage event
+    fakeSocket.onclose()
 
   it 'should add the socket to the list if a peering message is received', (done) ->
     message = 

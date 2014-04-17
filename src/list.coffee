@@ -12,10 +12,8 @@
   getNodeList: () ->
     self = this
     fields = Object.keys this
-
     isNotAFunction = (element) ->
       return typeof self[element] != 'function'
-    
     return fields.filter(isNotAFunction)
 
   # callbacks section

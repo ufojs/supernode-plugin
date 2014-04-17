@@ -93,8 +93,8 @@ module.exports = function(grunt) {
   grunt.registerTask('unit-test', ['mochaTest']);
   grunt.registerTask('compile', ['installDeps', 'browserify', 'uglify']);
   grunt.registerTask('bundle', ['compile', 'shell:copyStack', 'shell:copyHTML']);
-  grunt.registerTask('run-chrome', ['unit-test', 'bundle', 'shell:runchrome']);
   grunt.registerTask('integration-test', ['bundle', 'karma']);
+  grunt.registerTask('run-chrome', ['unit-test', 'integration-test', 'shell:runchrome']);
   
-  grunt.registerTask('default', ['installDeps']);
+  grunt.registerTask('default', ['bundle']);
 };
