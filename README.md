@@ -1,4 +1,4 @@
-ufojs-sn-chrome
+ufojs supernode plugin
 ===============
 
 Chrome application for ufojs supernodes
