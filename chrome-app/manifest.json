@@ -8,9 +8,9 @@
       "scripts": ["background.js"]
     }
   },
-  "permissions": [
-    "tabs"
-  ],
+  "externally_connectable": {
+    "matches": ["http://*/*", "https://*/*"]
+  },
   "sockets": {
     "tcpServer": {
       "listen": "*"

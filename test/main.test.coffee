@@ -4,23 +4,16 @@ should = chai.should()
 # Test lib
 rewire = require 'rewire'
 mainModule = null
-
-class fakeWSS
-  constructor: () ->
-  listen: () ->
-  onopen: (socket) ->
-
-class fakeList
-  constructor: () ->
-  add: (id, node) ->
-  remove: (id) ->
+# Mock lib
+{MockWebSocketServer} = require '../lib/ufo-mocks/websocket-server.mock'
+{MockList} = require '../lib/ufo-mocks/list.mock'
 
 describe 'The main method', ->
   
   beforeEach (done) ->
     mainModule = rewire '../src/main'
-    mainModule.__set__ 'WSS', fakeWSS
-    mainModule.__set__ 'List', fakeList
+    mainModule.__set__ 'WSS', MockWebSocketServer
+    mainModule.__set__ 'List', MockList
     done()
 
   it 'should accept onListChanged callback', (done) ->
@@ -32,14 +25,14 @@ describe 'The main method', ->
     done()
 
   it 'should put the websocket server in listening', (done) ->
-    fakeWSS::listen = () ->
-      fakeWSS::listen = () ->
+    MockWebSocketServer::listen = () ->
+      MockWebSocketServer::listen = () ->
       done()
 
     mainModule.main()
 
   it 'should allocate a node list', (done) ->
-    class thisList extends fakeList
+    class thisList extends MockList
       constructor: () ->
         done()
     mainModule.__set__ 'List', thisList
@@ -79,11 +72,11 @@ describe 'The main method', ->
     fakeSocket = {}
     callback = mainModule.__get__ 'onOpenCallback'
     callback fakeSocket
-    fakeList::remove = (id) -> 
-      fakeList::remove = (id) -> 
+    MockList::remove = (id) -> 
+      MockList::remove = (id) -> 
       id.should.be.equal 'the id'
       done()
-    mainModule.__set__ 'list', new fakeList
+    mainModule.__set__ 'list', new MockList
     
     fakeSocket.onmessage event
     fakeSocket.onclose()
@@ -99,12 +92,12 @@ describe 'The main method', ->
     fakeSocket = {}
     callback = mainModule.__get__ 'onOpenCallback'
     callback fakeSocket
-    fakeList::add = (id, node) -> 
-      fakeList::add = () ->
+    MockList::add = (id, node) -> 
+      MockList::add = () ->
       id.should.be.equal 'the id'
       node.should.be.equal fakeSocket
       done()
-    mainModule.__set__ 'list', new fakeList
+    mainModule.__set__ 'list', new MockList
     
     fakeSocket.onmessage event
 

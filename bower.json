@@ -15,10 +15,10 @@
   "license": "MIT",
   "ignore": [
     "**/.*",
-    "node_modules",
-    "bower_components"
+    "node_modules"
   ],
   "dependencies": {
-    "wssjs": "~0.0.5"
+    "wssjs": "~0.0.5",
+    "ufo-mocks": "~0.0.4"
   }
 }
