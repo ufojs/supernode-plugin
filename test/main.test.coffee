@@ -25,41 +25,53 @@ describe 'The main method', ->
     done()
 
   it 'should put the websocket server in listening', (done) ->
-    MockWebSocketServer::listen = () ->
-      MockWebSocketServer::listen = () ->
-      done()
+    class CustomMockWebSocketServer extends MockWebSocketServer
+      listen: () ->
+        done()
 
+    mainModule.__set__ 'WSS', CustomMockWebSocketServer
     mainModule.main()
 
   it 'should allocate a node list', (done) ->
-    class thisList extends MockList
+    class CustomMockList extends MockList
       constructor: () ->
         done()
-    mainModule.__set__ 'List', thisList
+    mainModule.__set__ 'List', CustomMockList
 
     mainModule.main()
 
   it 'should register the onopen callback', (done) ->
-    mainModule.__set__ 'onOpenCallback', () ->
+    class CustomMockWebSocketServer extends MockWebSocketServer
+      constructor: () ->
+      listen: () ->
+        this.should.respondTo 'onopen'
+        done()
+
+    thisMainModule = rewire '../src/main'
+    thisMainModule.__set__ 'WSS', CustomMockWebSocketServer
+    
+    thisMainModule.main()
+    
+
+  it 'should set onmessage callback in onOpenCallback', (done) ->
+    checkCallback = () ->
+      WSSClass = mainModule.__get__ 'WSS'
+      WSSClass.socketToSpawn.should.respondTo 'onmessage'
       done()
 
     mainModule.main()
-    wss = mainModule.__get__ 'wss'
-    wss.onopen()
+    setTimeout checkCallback, 100
 
-  it 'should set onmessage callback in onOpenCallback', (done) ->
-    fakeSocket = {}
-    callback = mainModule.__get__ 'onOpenCallback'
-    callback fakeSocket
-    fakeSocket.should.respondTo 'onmessage'
-    done()
 
   it 'should set onclose callback in onOpenCallback', (done) ->
-    fakeSocket = {}
-    callback = mainModule.__get__ 'onOpenCallback'
-    callback fakeSocket
-    fakeSocket.should.respondTo 'onclose'
-    done()
+    checkCallback = () ->
+      clearInterval spy
+      WSSClass = mainModule.__get__ 'WSS'
+      WSSClass.socketToSpawn.should.respondTo 'onclose'
+      done()
+
+    mainModule.main()
+    spy = setInterval checkCallback, 100
 
   it 'should remove a node from the list when it goes away', (done) ->
     message = 
@@ -69,18 +81,27 @@ describe 'The main method', ->
     message = JSON.stringify message
     event =
       'data': message
-    fakeSocket = {}
-    callback = mainModule.__get__ 'onOpenCallback'
-    callback fakeSocket
-    MockList::remove = (id) -> 
-      MockList::remove = (id) -> 
-      id.should.be.equal 'the id'
-      done()
-    mainModule.__set__ 'list', new MockList
-    
-    fakeSocket.onmessage event
-    fakeSocket.onclose()
 
+    WSSClass = mainModule.__get__ 'WSS'
+    socket = WSSClass.socketToSpawn
+
+    class CustomMockList extends MockList
+      remove: (id) -> 
+        id.should.be.equal 'the id'
+        done()
+    mainModule.__set__ 'List', CustomMockList
+
+    removeNodeCallback = () ->
+      socket.onclose()
+
+    addNodeCallback = () ->
+      socket.onmessage event
+      setTimeout removeNodeCallback, 50
+
+    mainModule.main()
+    addNodeCallback()
+    setTimeout addNodeCallback, 100
+    
   it 'should add the socket to the list if a peering message is received', (done) ->
     message = 
       'type': 'peering',
@@ -89,17 +110,22 @@ describe 'The main method', ->
     message = JSON.stringify message
     event =
       'data': message
-    fakeSocket = {}
-    callback = mainModule.__get__ 'onOpenCallback'
-    callback fakeSocket
+        
+    WSSClass = mainModule.__get__ 'WSS'
+    socket = WSSClass.socketToSpawn
+    
     MockList::add = (id, node) -> 
       MockList::add = () ->
       id.should.be.equal 'the id'
-      node.should.be.equal fakeSocket
+      node.should.be.equal socket
       done()
     mainModule.__set__ 'list', new MockList
-    
-    fakeSocket.onmessage event
+
+    newNodeCallback = () ->
+      socket.onmessage event
+
+    mainModule.main()
+    setTimeout newNodeCallback, 100
 
   it 'should close if the received message is not a peering one', (done) ->
     message = 
@@ -109,23 +135,69 @@ describe 'The main method', ->
     message = JSON.stringify message
     event =
       'data': message
-    fakeSocket = {}
-    fakeSocket.close = () ->
+
+    WSSClass = mainModule.__get__ 'WSS'
+    socket = WSSClass.socketToSpawn
+    socket.close = () ->
       done()
-    callback = mainModule.__get__ 'onOpenCallback'
-    callback fakeSocket
-    
-    fakeSocket.onmessage event
+
+    newNodeCallback = () ->
+      socket.onmessage event
+
+    mainModule.main()
+    setTimeout newNodeCallback, 100
 
   it 'should close if the received message is not an ufo packet', (done) ->
     message = 'not an ufo packet'
     message = JSON.stringify message
     event =
       'data': message
-    fakeSocket = {}
-    fakeSocket.close = () ->
+
+    WSSClass = mainModule.__get__ 'WSS'
+    socket = WSSClass.socketToSpawn
+    socket.close = () ->
       done()
-    callback = mainModule.__get__ 'onOpenCallback'
-    callback fakeSocket
-    
-    fakeSocket.onmessage event
+
+    newNodeCallback = () ->
+      socket.onmessage event
+
+    mainModule.main()
+    setTimeout newNodeCallback, 100
+
+
+  it 'should respond to send call', (done) ->
+    mainModule.should.respondTo 'send'
+    done()
+
+  it 'should send a packet to an id', (done) ->
+    socket = {}
+    socket.send = (message) ->
+      message.should.be.equal '{"test":"packet"}'
+      done()
+    socket.close = () ->
+    list = {}
+    list['id'] = socket
+
+    mainModule.__set__ 'list', list
+    mainModule.send 'id', { 'test': 'packet' }
+
+  it 'should close the socket once the message is sent', (done) ->
+    socket = {}
+    socket.send = (message) ->
+    socket.close = () ->
+      done()
+    list = {}
+    list['id'] = socket
+
+    mainModule.__set__ 'list', list
+    mainModule.send 'id', { 'test': 'packet' }
+
+  it 'should manage the id absence', (done) ->
+    list = {}
+    sendMethod = () ->
+      mainModule.send 'id', { 'test': 'packet' }
+
+    mainModule.__set__ 'list', list
+    sendMethod.should.not.throw()
+    done()
+
