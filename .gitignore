@@ -2,5 +2,5 @@
 node_modules/
 lib/
 npm-debug.log
-chrome-app/supernode.bundle.min.js
-chrome-app/window.html
+chrome/ufo-app/supernode.bundle.min.js
+chrome/ufo-extension/popup.html

@@ -67,7 +67,8 @@ module.exports = function(config) {
       ChromeApp: {
         base: 'Chrome',
         flags: [
-          '--load-and-launch-app=chrome-app',
+          '--load-and-launch-app=chrome/ufo-app',
+          '--load-and-launch-app=chrome/ufo-extension',
           '--no-first-run',
           '--no-sandbox'
         ]

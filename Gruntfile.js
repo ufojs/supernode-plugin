@@ -52,12 +52,12 @@ module.exports = function(grunt) {
     shell: {
       copyStack: {
         command: function() {
-          return 'cp lib/supernode.bundle.min.js chrome-app/';
+          return 'cp lib/supernode.bundle.min.js chrome/ufo-app/';
         }
       },
       copyHTML: {
         command: function() {
-          return 'cp pages/window.html chrome-app/window.html';
+          return 'cp pages/popup.html chrome/ufo-extension/popup.html';
         }
       },
       runchrome: {
@@ -66,7 +66,9 @@ module.exports = function(grunt) {
           var currentOS = os.type();
           if(currentOS=='Darwin')
             chrome = '/Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome';
-          return chrome + ' --load-and-launch-app=chrome-app --user-data-dir=/tmp/testufo';
+          return chrome + ' --load-and-launch-app=chrome/ufo-app' 
+                        + ' --load-and-launch-app=chrome/ufo-extension'
+                        + ' --user-data-dir=/tmp/testufo';
         }
       }
     },
@@ -78,8 +80,8 @@ module.exports = function(grunt) {
     clean: [
       'lib/',
       'node_modules/',
-      'chrome-app/window.html',
-      'chrome-app/supernode.bundle.min.js',
+      'chrome/ufo-app/supernode.bundle.min.js',
+      'chrome/ufo-extension/popup.html'
     ]
   });
 

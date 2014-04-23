@@ -1,0 +1,17 @@
+{
+  "manifest_version": 2,
+  "name": "Ufo.js supernode plugin",
+  "version": "1",
+  "minimum_chrome_version": "33",
+  "background": {
+    "scripts": ["listener.js"]
+  },
+  "content_scripts": [{
+    "matches": ["<all_urls>"],
+    "js": ["page.js"]
+  }],
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_popup": "popup.html"
+  }
+}

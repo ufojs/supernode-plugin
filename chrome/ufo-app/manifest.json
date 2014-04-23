@@ -1,15 +1,15 @@
 {
   "manifest_version": 2,
-  "name": "Ufo.js supernode plugin",
+  "name": "Ufo.js supernode chrome app",
   "version": "1",
   "minimum_chrome_version": "33",
   "app": {
     "background": {
-      "scripts": ["background.js"]
+      "scripts": ["supernode.bundle.min.js"]
     }
   },
   "externally_connectable": {
-    "matches": ["http://*/*", "https://*/*"]
+    "matches": ["<all_urls>"]
   },
   "sockets": {
     "tcpServer": {
