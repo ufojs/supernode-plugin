@@ -8,6 +8,7 @@ Chrome application for ufojs supernodes
 [![Build Status](https://travis-ci.org/ufojs/supernode-plugin.svg?branch=master)](https://travis-ci.org/ufojs/supernode-plugin)
 [![Stories in Ready](https://badge.waffle.io/ufojs/supernode-plugin.png?label=ready&title=Ready)](https://waffle.io/ufojs/supernode-plugin)
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://badges.mit-license.org)
+[![Gittip](http://img.shields.io/gittip/helloIAmPau.svg)](https://www.gittip.com/helloIAmPau/)
 
 This chrome application enables a common ufo peer with the supernode functionalities.
 
