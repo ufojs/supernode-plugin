@@ -5,12 +5,13 @@
   "minimum_chrome_version": "33",
   "app": {
     "background": {
-      "scripts": ["supernode.bundle.min.js"]
+      "scripts": ["supernode.bundle.min.js", "app.js"]
     }
   },
   "externally_connectable": {
-    "matches": ["<all_urls>"]
+    "matches": ["*://*.google.it/*", "http://localhost:9876/*"]
   },
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAz2KRU44zMcvC023eqph0ZV/UyEYRo1rRPDlkYTyATioYia+1fuvkFADMFp5doMBXdRfbCmY3E0DdqjzbN14DbhNcsup4XlvRUV9Q7SHLu+e3rTak8JOH57ebZvavW0/Uapg5FEl+GQCe2sqej4WicLno8aJs6p2giCby60ciXYR9iMCKm6/z+EYahYnacvQy4uWYnQ2l1yfZ13nulWMuJTFghXU8qi0I8hGSb2HS8PM7julSPo7LXl23RnsG7Xi1JYMGbZVhQXNkMnYTFSCCWQYxOAcZT3opkZoqxt1iOiDEEswv5WFudtAJ5OIcc0kODQMCe0dp7mAQeQaiZDREGwIDAQAB",
   "sockets": {
     "tcpServer": {
       "listen": "*"

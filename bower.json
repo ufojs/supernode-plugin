@@ -19,6 +19,6 @@
   ],
   "dependencies": {
     "wssjs": "~0.0.5",
-    "ufo-mocks": "~0.0.6"
+    "ufo-mocks": "~0.0.10"
   }
 }

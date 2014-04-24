@@ -55,9 +55,9 @@ module.exports = function(grunt) {
           return 'cp lib/supernode.bundle.min.js chrome/ufo-app/';
         }
       },
-      copyHTML: {
+      copyAppHTML: {
         command: function() {
-          return 'cp pages/popup.html chrome/ufo-extension/popup.html';
+          return 'cp pages/app.html chrome/ufo-app/app.html';
         }
       },
       runchrome: {
@@ -67,7 +67,6 @@ module.exports = function(grunt) {
           if(currentOS=='Darwin')
             chrome = '/Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome';
           return chrome + ' --load-and-launch-app=chrome/ufo-app' 
-                        + ' --load-and-launch-app=chrome/ufo-extension'
                         + ' --user-data-dir=/tmp/testufo';
         }
       }
@@ -81,7 +80,7 @@ module.exports = function(grunt) {
       'lib/',
       'node_modules/',
       'chrome/ufo-app/supernode.bundle.min.js',
-      'chrome/ufo-extension/popup.html'
+      'chrome/ufo-app/app.html'
     ]
   });
 
@@ -98,7 +97,7 @@ module.exports = function(grunt) {
   grunt.registerTask('develop', ['installDeps', 'watch:test']);
   grunt.registerTask('unit-test', ['mochaTest']);
   grunt.registerTask('compile', ['installDeps', 'browserify', 'uglify']);
-  grunt.registerTask('bundle', ['compile', 'shell:copyStack', 'shell:copyHTML']);
+  grunt.registerTask('bundle', ['compile', 'shell:copyStack', 'shell:copyAppHTML']);
   grunt.registerTask('integration-test', ['bundle', 'karma']);
   grunt.registerTask('run-chrome', ['unit-test', 'integration-test', 'shell:runchrome']);
   

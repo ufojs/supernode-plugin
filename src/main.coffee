@@ -11,7 +11,7 @@ exports.send = (id, packet) ->
   node.send packet
   node.close()
 
-exports.main = (onListChanged) ->
+exports.main = (onMessageFromServer, onListChanged) ->
   onOpenCallback = (socket) ->
     originator = null
 
@@ -21,6 +21,7 @@ exports.main = (onListChanged) ->
         throw new Error if packet.type != 'peering'
         list.add packet.originator, socket
         originator = packet.originator
+        onMessageFromServer packet
       catch error
         socket.close()
     onCloseCallback = () ->

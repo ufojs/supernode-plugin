@@ -18,7 +18,7 @@ describe 'The main method', ->
 
   it 'should accept onListChanged callback', (done) ->
     callback = (theList) ->
-    mainModule.main callback
+    mainModule.main null, callback
     currentList = mainModule.__get__ 'list'
     currentList.onnodeadded.should.be.equal callback
     currentList.onnoderemoved.should.be.equal callback
@@ -114,17 +114,41 @@ describe 'The main method', ->
     WSSClass = mainModule.__get__ 'WSS'
     socket = WSSClass.socketToSpawn
     
-    MockList::add = (id, node) -> 
-      MockList::add = () ->
-      id.should.be.equal 'the id'
-      node.should.be.equal socket
-      done()
-    mainModule.__set__ 'list', new MockList
+    class CustomMockList extends MockList
+      add: (id, node) -> 
+        id.should.be.equal 'the id'
+        node.should.be.equal socket
+        done()
+    mainModule.__set__ 'List', CustomMockList
 
     newNodeCallback = () ->
       socket.onmessage event
 
     mainModule.main()
+    setTimeout newNodeCallback, 100
+
+  it 'should call a callback when a new valid message is received', (done) ->
+    message = 
+      'type': 'peering',
+      'originator': 'the id',
+      'body': 'the body'
+    message = JSON.stringify message
+    event =
+      'data': message
+        
+    WSSClass = mainModule.__get__ 'WSS'
+    socket = WSSClass.socketToSpawn
+    
+    newNodeCallback = () ->
+      socket.onmessage event
+
+    acceptedCallback = (message) ->
+      message.type.should.be.equal 'peering'
+      message.originator.should.be.equal 'the id'
+      message.body.should.be.equal 'the body'
+      done()
+
+    mainModule.main(acceptedCallback)
     setTimeout newNodeCallback, 100
 
   it 'should close if the received message is not a peering one', (done) ->
