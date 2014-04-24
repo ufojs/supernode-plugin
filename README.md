@@ -18,3 +18,19 @@ Then you can install it by using *Load unpacked extension...* button from the Ch
 All the tests can be run using ``npm test``. 
 
 Look at ``package.conf`` to learn all the project shortcuts.
+
+### How to use
+
+You can interact with the plugin using the common Chrome APP interface. You have to:
+```
+\\ connect to the extension
+var port = chrome.runtime.connect('cpbbgbmhgobhoakmbbjojjjdngnfbdbo');
+\\ set the message callback
+var onPortMessage = function(message) {
+  \\ it is fired when an external node sends a new message
+  ...
+  \\ send a reply message to the external node using the Chrome message API
+  port.postMessage({ 'body': 'a message', 'destination': 'the destination' });
+};
+port.onMessage.addListener(onPortMessage);
+```
