@@ -17,7 +17,7 @@ Then you can install it by using *Load unpacked extension...* button from the Ch
 
 All the tests can be run using ``npm test``. 
 
-Look at ``package.conf`` to learn all the project shortcuts.
+Look at ``package.json`` to learn all the project shortcuts.
 
 ### How to use
 
