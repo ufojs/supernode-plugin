@@ -3,4 +3,4 @@ node_modules/
 lib/
 npm-debug.log
 chrome/ufo-app/supernode.bundle.min.js
-chrome/ufo-extension/popup.html
+chrome/ufo-app/app.html
